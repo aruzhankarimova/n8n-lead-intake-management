@@ -1,0 +1,815 @@
+{
+   "active" : false,
+   "connections" : {
+      "Classify Service" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Set AI Chatbot Status",
+                  "type" : "main"
+               }
+            ],
+            [
+               {
+                  "index" : 0,
+                  "node" : "Set Other Service Status",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Normalize Lead Data" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Validate Lead Content",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Prepare Content Error" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return Content Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Prepare Type Error" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return Type Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Receive Lead" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Validate Field Types",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Save AI Chatbot Lead" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return AI Chatbot Success",
+                  "type" : "main"
+               }
+            ],
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return AI Chatbot Save Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Save Other Service Lead" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return Other Service Success",
+                  "type" : "main"
+               }
+            ],
+            [
+               {
+                  "index" : 0,
+                  "node" : "Return Other Service Save Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Set AI Chatbot Status" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Save AI Chatbot Lead",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Set Other Service Status" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Save Other Service Lead",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Validate Field Types" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Normalize Lead Data",
+                  "type" : "main"
+               }
+            ],
+            [
+               {
+                  "index" : 0,
+                  "node" : "Prepare Type Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      },
+      "Validate Lead Content" : {
+         "main" : [
+            [
+               {
+                  "index" : 0,
+                  "node" : "Classify Service",
+                  "type" : "main"
+               }
+            ],
+            [
+               {
+                  "index" : 0,
+                  "node" : "Prepare Content Error",
+                  "type" : "main"
+               }
+            ]
+         ]
+      }
+   },
+   "name" : "AI Lead Intake & Management",
+   "nodeGroups" : [],
+   "nodes" : [
+      {
+         "id" : "bfbb1fc6-474d-4cec-a611-4ea5efd98b4f",
+         "name" : "Validate Field Types",
+         "parameters" : {
+            "conditions" : {
+               "combinator" : "and",
+               "conditions" : [
+                  {
+                     "id" : "2553b755-ee29-4fa6-88e4-84b569b9a908",
+                     "leftValue" : "={{ typeof $json.body?.name }}",
+                     "operator" : {
+                        "operation" : "equals",
+                        "type" : "string"
+                     },
+                     "rightValue" : "string"
+                  },
+                  {
+                     "id" : "fc36d641-940f-41f4-9ebe-7c52ba816d9f",
+                     "leftValue" : "={{ typeof $json.body?.email }}",
+                     "operator" : {
+                        "operation" : "equals",
+                        "type" : "string"
+                     },
+                     "rightValue" : "string"
+                  },
+                  {
+                     "id" : "de1a3eb4-a9ec-48de-84f0-3b27cac41e46",
+                     "leftValue" : "={{ typeof $json.body?.service }}",
+                     "operator" : {
+                        "name" : "filter.operator.equals",
+                        "operation" : "equals",
+                        "type" : "string"
+                     },
+                     "rightValue" : "string"
+                  }
+               ],
+               "options" : {
+                  "caseSensitive" : true,
+                  "leftValue" : "",
+                  "typeValidation" : "strict",
+                  "version" : 4
+               }
+            },
+            "options" : {}
+         },
+         "position" : [
+            224,
+            0
+         ],
+         "type" : "n8n-nodes-base.if",
+         "typeVersion" : 2.4
+      },
+      {
+         "id" : "960a013b-c3fd-49e2-918d-a3ccbed67c90",
+         "name" : "Receive Lead",
+         "parameters" : {
+            "authentication" : "headerAuth",
+            "httpMethod" : "POST",
+            "options" : {},
+            "path" : "lead-intake-demo",
+            "responseMode" : "responseNode"
+         },
+         "position" : [
+            0,
+            0
+         ],
+         "type" : "n8n-nodes-base.webhook",
+         "typeVersion" : 2.2,
+         "webhookId" : "ACCFD3DA-F7D2-448F-B7A2-5C6D4A4F1035"
+      },
+      {
+         "id" : "3936d070-4c7c-4fcd-bea1-959ca676d40c",
+         "name" : "Normalize Lead Data",
+         "parameters" : {
+            "assignments" : {
+               "assignments" : [
+                  {
+                     "id" : "dd221989-6721-47bc-9606-3f005f53f448",
+                     "name" : "name",
+                     "type" : "string",
+                     "value" : "={{ String($json.body.name ?? '').trim() }}"
+                  },
+                  {
+                     "id" : "c814c20f-5a90-418b-bee3-d2dd1ad9c62c",
+                     "name" : "email",
+                     "type" : "string",
+                     "value" : "={{ String($json.body.email ?? '').trim().toLowerCase() }}"
+                  },
+                  {
+                     "id" : "3c465a01-6914-4197-a121-c380158bf0c4",
+                     "name" : "service",
+                     "type" : "string",
+                     "value" : "={{ String($json.body.service ?? '').trim() }}"
+                  }
+               ]
+            },
+            "options" : {}
+         },
+         "position" : [
+            496,
+            -16
+         ],
+         "type" : "n8n-nodes-base.set",
+         "typeVersion" : 3.5
+      },
+      {
+         "id" : "f8813043-5628-4f22-a178-6a40f5c908ea",
+         "name" : "Validate Lead Content",
+         "parameters" : {
+            "conditions" : {
+               "combinator" : "and",
+               "conditions" : [
+                  {
+                     "id" : "03e303e6-96fe-4b5b-b8f5-7c25be4b4fbb",
+                     "leftValue" : "={{ $json.email }}",
+                     "operator" : {
+                        "operation" : "regex",
+                        "type" : "string"
+                     },
+                     "rightValue" : "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+                  },
+                  {
+                     "id" : "217f4e0e-0b9f-457c-88e2-663d5a36ae62",
+                     "leftValue" : "={{ $json.name }}",
+                     "operator" : {
+                        "operation" : "notEmpty",
+                        "singleValue" : true,
+                        "type" : "string"
+                     },
+                     "rightValue" : ""
+                  },
+                  {
+                     "id" : "2daa7d9f-92fb-40d0-b4c8-e9037929fa24",
+                     "leftValue" : "={{ $json.service }}",
+                     "operator" : {
+                        "operation" : "notEmpty",
+                        "singleValue" : true,
+                        "type" : "string"
+                     },
+                     "rightValue" : ""
+                  },
+                  {
+                     "id" : "bb06b9f2-7835-4a92-bf13-0a91f5a332b0",
+                     "leftValue" : "={{ $json.name }}",
+                     "operator" : {
+                        "operation" : "notRegex",
+                        "type" : "string"
+                     },
+                     "rightValue" : "^[0-9]+$"
+                  }
+               ],
+               "options" : {
+                  "caseSensitive" : true,
+                  "leftValue" : "",
+                  "typeValidation" : "strict",
+                  "version" : 4
+               }
+            },
+            "options" : {}
+         },
+         "position" : [
+            672,
+            0
+         ],
+         "type" : "n8n-nodes-base.if",
+         "typeVersion" : 2.4
+      },
+      {
+         "id" : "15ae3463-8a48-4231-8ca2-151709030390",
+         "name" : "Classify Service",
+         "parameters" : {
+            "conditions" : {
+               "combinator" : "and",
+               "conditions" : [
+                  {
+                     "id" : "a20bc7f9-de4c-4f10-9a35-d2e925b448cd",
+                     "leftValue" : "={{ $json.service }}",
+                     "operator" : {
+                        "name" : "filter.operator.equals",
+                        "operation" : "equals",
+                        "type" : "string"
+                     },
+                     "rightValue" : "AI chatbot"
+                  }
+               ],
+               "options" : {
+                  "caseSensitive" : true,
+                  "leftValue" : "",
+                  "typeValidation" : "strict",
+                  "version" : 4
+               }
+            },
+            "options" : {}
+         },
+         "position" : [
+            896,
+            -80
+         ],
+         "type" : "n8n-nodes-base.if",
+         "typeVersion" : 2.4
+      },
+      {
+         "id" : "28ab9b12-8479-480b-88a2-561352b5ede8",
+         "name" : "Set AI Chatbot Status",
+         "parameters" : {
+            "assignments" : {
+               "assignments" : [
+                  {
+                     "id" : "86a9fd95-d0ff-41f0-8ac3-ab8720bd7a4d",
+                     "name" : "status",
+                     "type" : "string",
+                     "value" : "Ai chatbot lead"
+                  }
+               ]
+            },
+            "includeOtherFields" : true,
+            "options" : {}
+         },
+         "position" : [
+            1120,
+            -144
+         ],
+         "type" : "n8n-nodes-base.set",
+         "typeVersion" : 3.5
+      },
+      {
+         "id" : "2a65f3ae-c97a-4991-a391-2ccfab7b11d3",
+         "name" : "Set Other Service Status",
+         "parameters" : {
+            "assignments" : {
+               "assignments" : [
+                  {
+                     "id" : "829fa9c1-3079-4be4-8dad-e6ec7ce41656",
+                     "name" : "status",
+                     "type" : "string",
+                     "value" : "Other service lead"
+                  }
+               ]
+            },
+            "includeOtherFields" : true,
+            "options" : {}
+         },
+         "position" : [
+            1040,
+            32
+         ],
+         "type" : "n8n-nodes-base.set",
+         "typeVersion" : 3.5
+      },
+      {
+         "id" : "6d6eb444-9f0d-46c3-823d-7d9cd945c89c",
+         "name" : "Prepare Content Error",
+         "parameters" : {
+            "assignments" : {
+               "assignments" : [
+                  {
+                     "id" : "66401b19-5697-4174-8e64-0c375e57daf2",
+                     "name" : "validation_status",
+                     "type" : "string",
+                     "value" : "rejected"
+                  },
+                  {
+                     "id" : "58ea5935-1521-40cd-a7d2-bd5fb79d60fe",
+                     "name" : "message",
+                     "type" : "string",
+                     "value" : "Invalid input data"
+                  }
+               ]
+            },
+            "options" : {}
+         },
+         "position" : [
+            944,
+            240
+         ],
+         "type" : "n8n-nodes-base.set",
+         "typeVersion" : 3.5
+      },
+      {
+         "id" : "ed873943-498a-4dde-817c-eec16f76adc4",
+         "name" : "Prepare Type Error",
+         "parameters" : {
+            "assignments" : {
+               "assignments" : [
+                  {
+                     "id" : "66094b57-d2d5-49a4-8611-9283a63ebaf4",
+                     "name" : "validation_status",
+                     "type" : "string",
+                     "value" : "rejected"
+                  },
+                  {
+                     "id" : "14651f52-9f54-4774-ab03-93b77e40ec82",
+                     "name" : "message",
+                     "type" : "string",
+                     "value" : "Invalid field types"
+                  }
+               ]
+            },
+            "options" : {}
+         },
+         "position" : [
+            512,
+            192
+         ],
+         "type" : "n8n-nodes-base.set",
+         "typeVersion" : 3.5
+      },
+      {
+         "id" : "67a81fea-21f7-45e9-8348-a4c0ecdfd351",
+         "name" : "Save AI Chatbot Lead",
+         "onError" : "continueErrorOutput",
+         "parameters" : {
+            "columns" : {
+               "attemptToConvertTypes" : false,
+               "convertFieldsToString" : false,
+               "mappingMode" : "defineBelow",
+               "matchingColumns" : [
+                  "email"
+               ],
+               "schema" : [
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "name",
+                     "id" : "name",
+                     "removed" : false,
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "email",
+                     "id" : "email",
+                     "removed" : false,
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "service",
+                     "id" : "service",
+                     "removed" : false,
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "status",
+                     "id" : "status",
+                     "removed" : false,
+                     "required" : false,
+                     "type" : "string"
+                  }
+               ],
+               "value" : {
+                  "email" : "={{ $json.email }}",
+                  "name" : "={{ $json.name }}",
+                  "service" : "={{ $json.service }}",
+                  "status" : "={{ $json.status }}"
+               }
+            },
+            "documentId" : {
+               "__rl" : true,
+               "mode" : "id",
+               "value" : "YOUR_SPREADSHEET_ID"
+            },
+            "operation" : "appendOrUpdate",
+            "options" : {},
+            "sheetName" : {
+               "__rl" : true,
+               "mode" : "name",
+               "value" : "Leads"
+            }
+         },
+         "position" : [
+            1344,
+            -96
+         ],
+         "type" : "n8n-nodes-base.googleSheets",
+         "typeVersion" : 4.7
+      },
+      {
+         "id" : "38336b92-caa3-4e47-8cff-a2f1adb5e951",
+         "name" : "Save Other Service Lead",
+         "onError" : "continueErrorOutput",
+         "parameters" : {
+            "columns" : {
+               "attemptToConvertTypes" : false,
+               "convertFieldsToString" : false,
+               "mappingMode" : "defineBelow",
+               "matchingColumns" : [
+                  "email"
+               ],
+               "schema" : [
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "name",
+                     "id" : "name",
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "email",
+                     "id" : "email",
+                     "removed" : false,
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "service",
+                     "id" : "service",
+                     "required" : false,
+                     "type" : "string"
+                  },
+                  {
+                     "canBeUsedToMatch" : true,
+                     "defaultMatch" : false,
+                     "display" : true,
+                     "displayName" : "status",
+                     "id" : "status",
+                     "required" : false,
+                     "type" : "string"
+                  }
+               ],
+               "value" : {
+                  "email" : "={{ $json.email }}",
+                  "name" : "={{ $json.name }}",
+                  "service" : "={{ $json.service }}",
+                  "status" : "={{ $json.status }}"
+               }
+            },
+            "documentId" : {
+               "__rl" : true,
+               "mode" : "id",
+               "value" : "YOUR_SPREADSHEET_ID"
+            },
+            "operation" : "appendOrUpdate",
+            "options" : {},
+            "sheetName" : {
+               "__rl" : true,
+               "mode" : "name",
+               "value" : "Leads"
+            }
+         },
+         "position" : [
+            1344,
+            96
+         ],
+         "type" : "n8n-nodes-base.googleSheets",
+         "typeVersion" : 4.7
+      },
+      {
+         "id" : "6b1697a7-2dcd-4c79-95f6-ce8b970b6cba",
+         "name" : "Return Content Error",
+         "parameters" : {
+            "enableResponseOutput" : true,
+            "options" : {
+               "responseCode" : 400
+            }
+         },
+         "position" : [
+            1184,
+            288
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "bbd7c78e-deeb-44a1-9719-020fb17716fa",
+         "name" : "Return Type Error",
+         "parameters" : {
+            "options" : {
+               "responseCode" : 400
+            }
+         },
+         "position" : [
+            704,
+            256
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "5a0f9e73-6ec8-4f3b-95fe-34597ecf30d5",
+         "name" : "Return AI Chatbot Success",
+         "parameters" : {
+            "options" : {
+               "responseCode" : 200
+            },
+            "respondWith" : "json",
+            "responseBody" : "\n{\n  \"validation_status\": \"accepted\",\n  \"message\": \"Lead saved successfully\"\n}\n"
+         },
+         "position" : [
+            1600,
+            -256
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "8dace724-fc3d-4381-8c51-08a86548d3bc",
+         "name" : "Return Other Service Success",
+         "parameters" : {
+            "options" : {
+               "responseCode" : 200
+            },
+            "respondWith" : "json",
+            "responseBody" : "{\n  \"validation_status\": \"accepted\",\n  \"message\": \"Lead saved successfully\"\n}"
+         },
+         "position" : [
+            1648,
+            80
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "e45b6c8f-6eac-43e5-a8a1-7ee790e1d5e2",
+         "name" : "Return AI Chatbot Save Error",
+         "parameters" : {
+            "options" : {
+               "responseCode" : 500
+            },
+            "respondWith" : "json",
+            "responseBody" : "\n{\n  \"validation_status\": \"error\",\n  \"message\": \"Failed to save lead\"\n}\n"
+         },
+         "position" : [
+            1664,
+            -80
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "e845b29a-5f50-4c08-b387-db73dabbde20",
+         "name" : "Return Other Service Save Error",
+         "parameters" : {
+            "options" : {
+               "responseCode" : 500
+            },
+            "respondWith" : "json",
+            "responseBody" : "{\n  \"validation_status\": \"error\",\n  \"message\": \"Failed to save lead\"\n}"
+         },
+         "position" : [
+            1632,
+            256
+         ],
+         "type" : "n8n-nodes-base.respondToWebhook",
+         "typeVersion" : 1.5
+      },
+      {
+         "id" : "157c311d-67f4-46a6-a265-9d07b3e16dfc",
+         "name" : "Sticky Note",
+         "parameters" : {
+            "content" : "\n## 01 — Lead Reception\n\nReceives incoming lead requests via POST Webhook.\n\nSecured with Header Authentication.\n",
+            "height" : 304,
+            "width" : 224
+         },
+         "position" : [
+            -80,
+            -176
+         ],
+         "type" : "n8n-nodes-base.stickyNote",
+         "typeVersion" : 1
+      },
+      {
+         "id" : "770fd412-8da0-4af7-8aff-afec642d971b",
+         "name" : "Sticky Note1",
+         "parameters" : {
+            "color" : 5,
+            "content" : "\n## 02 — Data Validation\n\n- Validates input field types.\n- Normalizes incoming data.\n- Checks required fields and email format.\n  ",
+            "height" : 272,
+            "width" : 624
+         },
+         "position" : [
+            192,
+            -128
+         ],
+         "type" : "n8n-nodes-base.stickyNote",
+         "typeVersion" : 1
+      },
+      {
+         "id" : "3a9fe16c-f00e-4bad-86c2-b9653c8c2d00",
+         "name" : "Sticky Note2",
+         "parameters" : {
+            "color" : 6,
+            "content" : "\n## 03 — Service Classification\n\nClassifies leads based on the requested service and assigns the appropriate status.\n  ",
+            "height" : 416,
+            "width" : 416
+         },
+         "position" : [
+            864,
+            -224
+         ],
+         "type" : "n8n-nodes-base.stickyNote",
+         "typeVersion" : 1
+      },
+      {
+         "id" : "a685e930-3cca-40b3-b338-4ab1025a685f",
+         "name" : "Sticky Note3",
+         "parameters" : {
+            "color" : 4,
+            "content" : "\n## 04 — Data Storage\n\nSaves new leads or updates existing records in Google Sheets using email as the matching field.\n  ",
+            "height" : 560,
+            "width" : 224
+         },
+         "position" : [
+            1296,
+            -288
+         ],
+         "type" : "n8n-nodes-base.stickyNote",
+         "typeVersion" : 1
+      },
+      {
+         "id" : "a71f2547-3326-44b4-829d-5f8ac5e8de23",
+         "name" : "Sticky Note4",
+         "parameters" : {
+            "color" : 3,
+            "content" : "\n## 05 — Error Handling & Responses\n\n- HTTP 200: Lead saved successfully.\n- HTTP 400: Invalid input data.\n- HTTP 500: Technical error.\n  ",
+            "height" : 176,
+            "width" : 320
+         },
+         "position" : [
+            1712,
+            400
+         ],
+         "type" : "n8n-nodes-base.stickyNote",
+         "typeVersion" : 1
+      }
+   ],
+   "pinData" : {},
+   "settings" : {
+      "binaryMode" : "separate",
+      "executionOrder" : "v1"
+   },
+   "tags" : []
+}
